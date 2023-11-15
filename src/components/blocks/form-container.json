@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_elements_form_containers",
+  "info": {
+    "displayName": "FormContainer",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "Form": {
+      "type": "boolean"
+    }
+  }
+}

@@ -14,6 +14,8 @@
     "Content": {
       "type": "dynamiczone",
       "components": [
+        "blocks.form-container",
+        "blocks.image-text-vertical",
         "blocks.image-text"
       ]
     }

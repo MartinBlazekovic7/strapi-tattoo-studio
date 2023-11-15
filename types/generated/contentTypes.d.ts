@@ -683,6 +683,7 @@ export interface ApiArtistArtist extends Schema.CollectionType {
     singularName: 'artist';
     pluralName: 'artists';
     displayName: 'Artist';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -691,6 +692,11 @@ export interface ApiArtistArtist extends Schema.CollectionType {
     name: Attribute.String;
     description: Attribute.Text;
     image: Attribute.Media;
+    galleries: Attribute.Relation<
+      'api::artist.artist',
+      'oneToMany',
+      'api::gallery.gallery'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -702,6 +708,52 @@ export interface ApiArtistArtist extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::artist.artist',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiDesignDesign extends Schema.CollectionType {
+  collectionName: 'designs';
+  info: {
+    singularName: 'design';
+    pluralName: 'designs';
+    displayName: 'Design';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    slug: Attribute.String;
+    price: Attribute.Integer;
+    image: Attribute.Media;
+    type: Attribute.Relation<
+      'api::design.design',
+      'oneToOne',
+      'api::type.type'
+    >;
+    tags: Attribute.Relation<'api::design.design', 'oneToMany', 'api::tag.tag'>;
+    popularity: Attribute.Integer;
+    artists: Attribute.Relation<
+      'api::design.design',
+      'oneToMany',
+      'api::artist.artist'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::design.design',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::design.design',
       'oneToOne',
       'admin::user'
     > &
@@ -725,6 +777,11 @@ export interface ApiGalleryGallery extends Schema.CollectionType {
     tattooTitle: Attribute.String;
     tattooDescription: Attribute.Text;
     customer: Attribute.String;
+    artist: Attribute.Relation<
+      'api::gallery.gallery',
+      'manyToOne',
+      'api::artist.artist'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -754,7 +811,13 @@ export interface ApiHomePageHomePage extends Schema.SingleType {
     draftAndPublish: true;
   };
   attributes: {
-    Content: Attribute.DynamicZone<['blocks.image-text']>;
+    Content: Attribute.DynamicZone<
+      [
+        'blocks.form-container',
+        'blocks.image-text-vertical',
+        'blocks.image-text'
+      ]
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -805,6 +868,50 @@ export interface ApiReviewReview extends Schema.CollectionType {
   };
 }
 
+export interface ApiTagTag extends Schema.CollectionType {
+  collectionName: 'tags';
+  info: {
+    singularName: 'tag';
+    pluralName: 'tags';
+    displayName: 'Tag';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::tag.tag', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::tag.tag', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiTypeType extends Schema.CollectionType {
+  collectionName: 'types';
+  info: {
+    singularName: 'type';
+    pluralName: 'types';
+    displayName: 'Type';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::type.type', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::type.type', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -822,9 +929,12 @@ declare module '@strapi/types' {
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'plugin::i18n.locale': PluginI18NLocale;
       'api::artist.artist': ApiArtistArtist;
+      'api::design.design': ApiDesignDesign;
       'api::gallery.gallery': ApiGalleryGallery;
       'api::home-page.home-page': ApiHomePageHomePage;
       'api::review.review': ApiReviewReview;
+      'api::tag.tag': ApiTagTag;
+      'api::type.type': ApiTypeType;
     }
   }
 }

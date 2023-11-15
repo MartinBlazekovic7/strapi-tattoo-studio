@@ -4,7 +4,8 @@
   "info": {
     "singularName": "artist",
     "pluralName": "artists",
-    "displayName": "Artist"
+    "displayName": "Artist",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -18,11 +19,18 @@
       "type": "text"
     },
     "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
+    },
+    "galleries": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::gallery.gallery",
+      "mappedBy": "artist"
     }
   }
 }
